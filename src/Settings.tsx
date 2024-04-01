@@ -9,8 +9,7 @@ type SettingsProps = {
   startGreaterOrEqualMax: boolean;
   isError: boolean;
   isSetupping: boolean;
-  onChangeStartValue: (event: ChangeEvent<HTMLInputElement>) => void;
-  onChangeMaxValue: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeSettings: (event: ChangeEvent<HTMLInputElement>) => void;
   onSetCount: () => void;
 };
 
@@ -22,8 +21,7 @@ export default function Settings({
   startGreaterOrEqualMax,
   isError,
   isSetupping,
-  onChangeMaxValue,
-  onChangeStartValue,
+  onChangeSettings,
   onSetCount,
 }: SettingsProps) {
   return (
@@ -36,7 +34,8 @@ export default function Settings({
               isMaxValueInvalid || startGreaterOrEqualMax ? "error" : ""
             }
             value={maxValue}
-            onChange={onChangeMaxValue}
+            name="maxValue"
+            onChange={onChangeSettings}
             type="number"
           />
         </label>
@@ -47,7 +46,8 @@ export default function Settings({
               isStartValueInvalid || startGreaterOrEqualMax ? "error" : ""
             }
             value={startValue}
-            onChange={onChangeStartValue}
+            name="startValue"
+            onChange={onChangeSettings}
             type="number"
           />
         </label>

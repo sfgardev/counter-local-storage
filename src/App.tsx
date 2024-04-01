@@ -1,10 +1,10 @@
 import "./App.css";
-import Counter from "./Counter";
+import CounterView from "./CounterView";
 
 function App() {
   return (
     <div className="App">
-      <Counter />
+      <CounterView />
     </div>
   );
 }
