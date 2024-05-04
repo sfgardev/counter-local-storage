@@ -1,37 +1,44 @@
 import { ChangeEvent, useState } from "react";
 import Counter from "./Counter";
 import Settings from "./Settings";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
+import { SettingsState } from "./store/settings-reducer";
 
-const setItemToLocalStorage = <T,>(key: string, value: T) => {
-  window.localStorage.setItem(key, JSON.stringify(value));
-};
+// const setItemToLocalStorage = <T,>(key: string, value: T) => {
+//   window.localStorage.setItem(key, JSON.stringify(value));
+// };
 
-const getItemFromLocalStorage = <T,>(key: string) => {
-  const localStorageItem = window.localStorage.getItem(key);
-  return localStorageItem ? (JSON.parse(localStorageItem) as T) : null;
-};
+// const getItemFromLocalStorage = <T,>(key: string) => {
+//   const localStorageItem = window.localStorage.getItem(key);
+//   return localStorageItem ? (JSON.parse(localStorageItem) as T) : null;
+// };
 
 export default function CounterView() {
-  const [settings, setSettings] = useState({
-    startValue: getItemFromLocalStorage<number>("startValue") || 0,
-    maxValue: getItemFromLocalStorage<number>("maxValue") || 0,
-  });
+  // const [settings, setSettings] = useState({
+  //   startValue: getItemFromLocalStorage<number>("startValue") || 0,
+  //   maxValue: getItemFromLocalStorage<number>("maxValue") || 0,
+  // });
 
-  const [isSetupping, setIsSetupping] = useState(false);
+  // const [isSetupping, setIsSetupping] = useState(false);
 
-  function handleChangeSettings(event: ChangeEvent<HTMLInputElement>) {
-    const { value, name } = event.target;
-    setSettings((prevState) => ({
-      ...prevState,
-      [name]: +value,
-    }));
-    setIsSetupping(true);
-    setItemToLocalStorage(name, +value);
-  }
+  // function handleChangeSettings(event: ChangeEvent<HTMLInputElement>) {
+  //   const { value, name } = event.target;
+  //   setSettings((prevState) => ({
+  //     ...prevState,
+  //     [name]: +value,
+  //   }));
+  //   setIsSetupping(true);
+  //   setItemToLocalStorage(name, +value);
+  // }
 
-  function handleSetCount() {
-    setIsSetupping(false);
-  }
+  // function handleSetCount() {
+  //   setIsSetupping(false);
+  // }
+
+  const settings = useSelector<RootState, SettingsState>(
+    (state) => state.settings
+  );
 
   const isStartValueInvalid = settings.startValue < 0;
   const isMaxValueInvalid = settings.maxValue < 0;
@@ -46,18 +53,18 @@ export default function CounterView() {
         maxValue={settings.maxValue}
         isError={isError}
         isMaxValueInvalid={isMaxValueInvalid}
-        isSetupping={isSetupping}
+        isSetupping={settings.isSetupping}
         isStartValueInvalid={isStartValueInvalid}
         startGreaterOrEqualMax={startGreaterOrEqualMax}
-        onChangeSettings={handleChangeSettings}
-        onSetCount={handleSetCount}
+        // onChangeSettings={handleChangeSettings}
+        // onSetCount={handleSetCount}
       />
 
       <Counter
         startValue={settings.startValue}
         maxValue={settings.maxValue}
         isError={isError}
-        isSetupping={isSetupping}
+        isSetupping={settings.isSetupping}
       />
     </>
   );

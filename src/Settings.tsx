@@ -1,5 +1,12 @@
-import { ChangeEvent } from "react";
+import { useDispatch } from "react-redux";
 import Button from "./Button";
+import { ChangeEvent } from "react";
+import {
+  changeMaxValueAC,
+  changeSetupAC,
+  changeStartValueAC,
+} from "./store/settings-reducer";
+import { resetCountAC } from "./store/counter-reducer";
 
 type SettingsProps = {
   startValue: number;
@@ -9,8 +16,8 @@ type SettingsProps = {
   startGreaterOrEqualMax: boolean;
   isError: boolean;
   isSetupping: boolean;
-  onChangeSettings: (event: ChangeEvent<HTMLInputElement>) => void;
-  onSetCount: () => void;
+  // onChangeSettings: (event: ChangeEvent<HTMLInputElement>) => void;
+  // onSetCount: () => void;
 };
 
 export default function Settings({
@@ -21,9 +28,26 @@ export default function Settings({
   startGreaterOrEqualMax,
   isError,
   isSetupping,
-  onChangeSettings,
-  onSetCount,
-}: SettingsProps) {
+}: // onChangeSettings,
+// onSetCount,
+SettingsProps) {
+  const dispatch = useDispatch();
+
+  const handleChangeMaxValue = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeMaxValueAC(Number(event.currentTarget.value)));
+    dispatch(changeSetupAC(true));
+  };
+
+  const handleChangeStartValue = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeStartValueAC(Number(event.currentTarget.value)));
+    dispatch(changeSetupAC(true));
+  };
+
+  const handleSetCount = () => {
+    dispatch(changeSetupAC(false));
+    dispatch(resetCountAC(startValue));
+  };
+
   return (
     <div className="counter">
       <div className="counter-table">
@@ -35,7 +59,7 @@ export default function Settings({
             }
             value={maxValue}
             name="maxValue"
-            onChange={onChangeSettings}
+            onChange={handleChangeMaxValue}
             type="number"
           />
         </label>
@@ -47,13 +71,13 @@ export default function Settings({
             }
             value={startValue}
             name="startValue"
-            onChange={onChangeSettings}
+            onChange={handleChangeStartValue}
             type="number"
           />
         </label>
       </div>
       <div className="buttons">
-        <Button disabled={!isSetupping || isError} onClick={onSetCount}>
+        <Button disabled={!isSetupping || isError} onClick={handleSetCount}>
           set
         </Button>
       </div>
