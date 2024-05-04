@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button";
+import { getValidationRules } from "./helpers";
 import {
   CounterState,
   incrementCountAC,
@@ -8,40 +8,34 @@ import {
 } from "./store/counter-reducer";
 import { RootState } from "./store/store";
 
-type CounterProps = {
-  startValue: number;
-  maxValue: number;
-  isError: boolean;
-  isSetupping: boolean;
-};
-
-export default function Counter({
-  startValue,
-  maxValue,
-  isError,
-  isSetupping,
-}: CounterProps) {
-  // const [count, setCount] = useState<number>(startValue);
-
+export default function Counter() {
   const counter = useSelector<RootState, CounterState>(
     (state) => state.counter
   );
+  const maxValue = useSelector<RootState, number>(
+    (state) => state.settings.maxValue
+  );
+  const startValue = useSelector<RootState, number>(
+    (state) => state.settings.startValue
+  );
+  const isSetupping = useSelector<RootState, boolean>(
+    (state) => state.settings.isSetupping
+  );
+
+  const { isError } = getValidationRules({ maxValue, startValue, isSetupping });
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // setCount(startValue);
-  }, [startValue]);
-
   const isCountEqualsMaxValue = counter.count === maxValue;
+  const isIncrememntButtonDisabled =
+    isCountEqualsMaxValue || isSetupping || isError;
+  const isResetButtonDisabled = isSetupping || isError;
 
   function handleIncrement() {
-    // setCount((prevState) => prevState + 1);
     dispatch(incrementCountAC());
   }
 
   function handleReset() {
-    // setCount(startValue);
     dispatch(resetCountAC(startValue));
   }
 
@@ -57,13 +51,10 @@ export default function Counter({
         )}
       </div>
       <div className="buttons">
-        <Button
-          disabled={isCountEqualsMaxValue || isSetupping || isError}
-          onClick={handleIncrement}
-        >
+        <Button disabled={isIncrememntButtonDisabled} onClick={handleIncrement}>
           inc
         </Button>
-        <Button disabled={isSetupping || isError} onClick={handleReset}>
+        <Button disabled={isResetButtonDisabled} onClick={handleReset}>
           reset
         </Button>
       </div>

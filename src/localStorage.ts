@@ -21,13 +21,13 @@ export const loadState = () => {
     if (serializedState === null) {
       return undefined;
     }
-    return JSON.parse(serializedState);
+    return JSON.parse(serializedState) as RootState;
   } catch (err) {
     return undefined;
   }
 };
 
-export const saveState = (state: RootState) => {
+export const saveState = (state: Partial<RootState>) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem("state", serializedState);

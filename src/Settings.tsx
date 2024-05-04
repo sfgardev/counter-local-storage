@@ -1,36 +1,26 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "./Button";
 import { ChangeEvent } from "react";
 import {
+  SettingsState,
   changeMaxValueAC,
   changeSetupAC,
   changeStartValueAC,
 } from "./store/settings-reducer";
 import { resetCountAC } from "./store/counter-reducer";
+import { RootState } from "./store/store";
+import { getValidationRules } from "./helpers";
 
-type SettingsProps = {
-  startValue: number;
-  maxValue: number;
-  isStartValueInvalid: boolean;
-  isMaxValueInvalid: boolean;
-  startGreaterOrEqualMax: boolean;
-  isError: boolean;
-  isSetupping: boolean;
-  // onChangeSettings: (event: ChangeEvent<HTMLInputElement>) => void;
-  // onSetCount: () => void;
-};
-
-export default function Settings({
-  startValue,
-  maxValue,
-  isMaxValueInvalid,
-  isStartValueInvalid,
-  startGreaterOrEqualMax,
-  isError,
-  isSetupping,
-}: // onChangeSettings,
-// onSetCount,
-SettingsProps) {
+export default function Settings() {
+  const settings = useSelector<RootState, SettingsState>(
+    (state) => state.settings
+  );
+  const {
+    isError,
+    isMaxValueInvalid,
+    isStartValueInvalid,
+    startGreaterOrEqualMax,
+  } = getValidationRules(settings);
   const dispatch = useDispatch();
 
   const handleChangeMaxValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +35,7 @@ SettingsProps) {
 
   const handleSetCount = () => {
     dispatch(changeSetupAC(false));
-    dispatch(resetCountAC(startValue));
+    dispatch(resetCountAC(settings.startValue));
   };
 
   return (
@@ -57,7 +47,7 @@ SettingsProps) {
             className={
               isMaxValueInvalid || startGreaterOrEqualMax ? "error" : ""
             }
-            value={maxValue}
+            value={settings.maxValue}
             name="maxValue"
             onChange={handleChangeMaxValue}
             type="number"
@@ -69,7 +59,7 @@ SettingsProps) {
             className={
               isStartValueInvalid || startGreaterOrEqualMax ? "error" : ""
             }
-            value={startValue}
+            value={settings.startValue}
             name="startValue"
             onChange={handleChangeStartValue}
             type="number"
@@ -77,7 +67,10 @@ SettingsProps) {
         </label>
       </div>
       <div className="buttons">
-        <Button disabled={!isSetupping || isError} onClick={handleSetCount}>
+        <Button
+          disabled={!settings.isSetupping || isError}
+          onClick={handleSetCount}
+        >
           set
         </Button>
       </div>
