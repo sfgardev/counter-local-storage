@@ -10,6 +10,7 @@ import {
 import { resetCountAC } from "./store/counter-reducer";
 import { RootState } from "./store/store";
 import { getValidationRules } from "./helpers";
+import Input from "./Input";
 
 export default function Settings() {
   const settings = useSelector<RootState, SettingsState>(
@@ -41,30 +42,24 @@ export default function Settings() {
   return (
     <div className="counter">
       <div className="counter-table">
-        <label>
-          max value:
-          <input
-            className={
-              isMaxValueInvalid || startGreaterOrEqualMax ? "error" : ""
-            }
-            value={settings.maxValue}
-            name="maxValue"
-            onChange={handleChangeMaxValue}
-            type="number"
-          />
-        </label>
-        <label>
-          start value:
-          <input
-            className={
-              isStartValueInvalid || startGreaterOrEqualMax ? "error" : ""
-            }
-            value={settings.startValue}
-            name="startValue"
-            onChange={handleChangeStartValue}
-            type="number"
-          />
-        </label>
+        <Input
+          label="max value:"
+          className={isMaxValueInvalid || startGreaterOrEqualMax ? "error" : ""}
+          type="number"
+          value={settings.maxValue}
+          name="maxValue"
+          onChange={handleChangeMaxValue}
+        />
+        <Input
+          label="start value:"
+          className={
+            isStartValueInvalid || startGreaterOrEqualMax ? "error" : ""
+          }
+          type="number"
+          value={settings.startValue}
+          name="startValue"
+          onChange={handleChangeStartValue}
+        />
       </div>
       <div className="buttons">
         <Button
